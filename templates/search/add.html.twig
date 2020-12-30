@@ -1,0 +1,12 @@
+{% extends 'layouts/site_layout.html.twig' %}
+
+{% block content %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary">Send</button>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
