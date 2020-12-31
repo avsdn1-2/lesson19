@@ -2,10 +2,22 @@
 
 {% block content %}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-    <button type="submit" class="btn btn-primary">Send</button>
-    {{ form_end(form) }}
+    <div style="width:260px;border:3px solid blue;margin:30px auto 0 auto;">
+        {{ form_start(form) }}
+            <div style="width:240px;margin:5px auto 0 auto;">{{ form_widget(form) }}</div>
+        <div style="width:60px;margin:5px auto 10px auto;"><button type="submit" class="btn btn-primary">ADD</button></div>
+        {{ form_end(form) }}
+
+        {%  if res == 0 %}
+            <div style="width:140px;height:30px;background-color:red;color:white;margin:0 auto 5px auto;">
+                <p style="width:120px;border:1px solid blue;margin:0 auto;padding-top:2px">Film not found!</p>
+            </div>
+        {%  elseif res == 2 %}
+            <div style="width:205px;height:30px;background-color:orangered;color:white;margin:0 auto 5px auto;">
+                <p style="width:185px;/*border:1px solid blue*/;margin:0 auto;padding-top:2px">Film is already in Catalog!</p>
+            </div>
+        {% endif %}
+    </div>
 
 {% endblock %}
 

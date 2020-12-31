@@ -38,6 +38,15 @@ class CatalogService implements CatalogServiceInterface
         return $result->toDto();
     }
 
+    public function searchById(int $id): ?MovieDto
+    {
+        $result = $this->movieCatalogRepository->findOneBy(['id'=>$id]);
+        if (!$result) {
+            return null;
+        }
+        return $result->toDto();
+    }
+
     public function list(): ?array
     {
         $list = $this->movieCatalogRepository->findAll();
@@ -58,13 +67,21 @@ class CatalogService implements CatalogServiceInterface
     //public function add(MovieDto $movieDto)
     public function add(string $title): ?int
     {
+        $movie = $this->movieCatalogRepository->findOneBy(['title'=>$title]);
+
+        if ($movie !== null)
+        {
+            //фильм уже есть в каталоге
+            return 2;
+        }
+
         $movie = $this->omdbService->findByTitle($title);
         if ($movie == null)
         {
-            //echo 'Film not found!';
-            //exit();
-            return null;
+            //фильм не найден на omdbService
+            return 0;
         }
+
         $this->movieCatalogRepository->save($movie);
         return 1;
     }

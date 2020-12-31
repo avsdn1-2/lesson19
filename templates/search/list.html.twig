@@ -7,44 +7,27 @@
 
     <div class="example-wrapper">
 
-
-        <div style="width:80px;margin:0 auto;"><a href="/addFilm"><button type="button" class="btn btn-success">ADD FILM</button></a></div>
-        {%  if res == null %}
-            <div style="width:130px;height:30px;background-color:red;color:white;margin:0 auto;">
-                <p>Film not found!</p>
-            </div>
-        {% endif %}
-
-
-
-            {% include 'components/modal.html.twig' %}
             {% for film in result%}
-                <div style="width:310px;height:680px;border:1px solid green;float:left;">
-                    <div style="width:310px;height:630px;">
-                        <p>{{ film.title }}</p>
-                        <p>{{ film.year }}</p>
-                        <img src="{{ film.poster }}"/>
-                        <p style="font-size:9px;">{{ film.plot }}</p>
+                <a href="/description/{{ film.id }}">
+                    <div style="width:310px;height:680px;border:1px solid green;float:left;">
+                        <div style="width:310px;height:630px;">
+                            <p>{{ film.title }}</p>
+                            <p>{{ film.year }}</p>
+                            <img src="{{ film.poster }}"/>
+                            <p style="font-size:9px;">{{ film.plot }}</p>
+                        </div>
+                        <div style="width:100%;margin:0 auto;">
+                            <div style="width:140px;float:left"><a href="/delete/{{film.id}}"><button type="button" class="btn btn-danger">REMOVE FILM</button></a></div>
+                            {%  if film.id in favorites %}
+                                <div style="width:160px;float:right"><a href="/removeFavorit/{{film.id}}"><button type="button" class="btn btn-secondary">REMOVE FM FAV</button></a></div>
+                            {%  else %}
+                                <div style="width:160px;float:right"><a href="/addFavorit/{{film.id}}"><button type="button" class="btn btn-warning">ADD TO FAVOR</button></a></div>
+                            {%  endif %}
+                        </div>
                     </div>
-                    <div style="100%;margin:0 auto;">
-                        <div style="width:140px;float:left"><a href="/delete/{{film.id}}"><button type="button" class="btn btn-danger">REMOVE FILM</button></a></div>
-                        {%  if film.id in favorites %}
-                            <div style="width:160px;float:right"><a href="/removeFavorit/{{film.id}}"><button type="button" class="btn btn-secondary">REMOVE FM FAV</button></a></div>
-                        {%  else %}
-                            <div style="width:160px;float:right"><a href="/addFavorit/{{film.id}}"><button type="button" class="btn btn-warning">ADD TO FAVOR</button></a></div>
-                        {%  endif %}
-                    </div>
-                </div>
+                </a>
             {% endfor %}
     </div>
 {% endblock %}
 
-{% block js_block %}
-    <!-- Скрипт, вызывающий модальное окно после загрузки страницы -->
-    <script>
-        $(document).ready(function() {
-            $("#myModalBox").modal('show');
-        });
-    </script>
 
-{% endblock %}

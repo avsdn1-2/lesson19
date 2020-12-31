@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-//session_start();
-
 use App\Entity\MovieCatalog;
 use App\Repository\MovieCatalogRepository;
 use App\Service\CatalogServiceInterface;
@@ -23,9 +21,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class SearchController extends AbstractController
 {
+    private $catalogService;
     /**
      * @Route("/search", name="search")
      */
+    /*
     public function index(CatalogServiceInterface $catalogService): Response
     {
         $result = $catalogService->search('Enemy Mine');
@@ -34,22 +34,27 @@ class SearchController extends AbstractController
             'result' => $result,
         ]);
     }
+    */
+    public function __construct(CatalogServiceInterface $catalogService)
+    {
+        $this->catalogService = $catalogService;
+    }
+
+    /**
+     * @Route("/", name="main")
+     */
+    public function index(): Response
+    {
+        return $this->redirectToRoute('list');
+    }
 
     /**
      * @Route("/list", name="list")
      */
-    public function list(CatalogServiceInterface $catalogService): Response
+    public function list(): Response
     {
-        $result = $catalogService->list()['list'];
-        $favorites_obj = $catalogService->list()['favorites'];
-
-        /*
-        $favorites = [];
-        foreach ($favorites_obj as $favorit)
-        {
-            $favorites[] = $favorit->getFilmId();
-        }
-        */
+        $result = $this->catalogService->list()['list'];
+        $favorites_obj = $this->catalogService->list()['favorites'];
 
         $session = $this->get('session');
         $res = $session->get('res');
@@ -63,12 +68,26 @@ class SearchController extends AbstractController
     }
 
     /**
+     * @Route("/description/{id}", name="description")
+     */
+    public function description($id): Response
+    {
+        $result = $this->catalogService->searchById($id);
+        dd($result);
+
+        return $this->render('search/description.html.twig', [
+            'result' => $result,
+
+        ]);
+    }
+
+    /**
      * @Route("/favorites", name="favorites")
      */
-    public function favorites(CatalogServiceInterface $catalogService): Response
+    public function favorites(): Response
     {
-        $result = $catalogService->list()['list'];
-        $favorites_obj = $catalogService->list()['favorites'];
+        $result = $this->catalogService->list()['list'];
+        $favorites_obj = $this->catalogService->list()['favorites'];
         $favorites = $this->toArray($favorites_obj);
         //очищаем список от нефаворитов
         foreach ($result as $key => $value)
@@ -94,53 +113,37 @@ class SearchController extends AbstractController
     /**
      * @Route("/addFilm", name="addFilm")
      */
-    public function addFilm(CatalogServiceInterface $catalogService): Response
+    public function addFilm(): Response
     {
         $form = $this->createForm(AddFormType::class);
+        $res = 1;
 
         if (isset($_POST['add_form']))
         {
             $add_form = $_POST['add_form'];
             $title = $add_form['title'];
-            $res = $catalogService->add($title);
+            $res = $this->catalogService->add($title);
 
             //$session = $this->getRequest()->getSession();
-            $session = $this->get('session');
+                //$session = $this->get('session');
 
             // store an attribute for reuse during a later user request
-            $session->set('res',$res);
+                //$session->set('res',$res);
             //dd($session);
 
-            return $this->redirectToRoute('list');
-            exit();
+            if ($res == 1){
+                return $this->redirectToRoute('list');
+                exit();
+            }
+
+
         }
 
         return $this->render('search/add.html.twig', array(
             'form' => $form->createView(),
+            'res' => $res
         ));
     }
-
-    /*
-    public function add(MovieCatalogRepository $movieCatalogRepository, OmdbServiceInterface $omdbService): Response
-    {
-        $form = $this->createForm(AddFormType::class);
-
-        if (isset($_POST['add_form']))
-        {
-            $add_form = $_POST['add_form'];
-            $title = $add_form['title'];
-            $movie = $omdbService->findByTitle($title);
-            $movieCatalogRepository->save($movie);
-
-            return $this->redirect('list');
-        }
-
-
-        return $this->render('search/add.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
-    */
 
     /**
      * @Route("/delete/{id}", name="delete")
