@@ -1,6 +1,6 @@
 {% extends 'layouts/site_layout.html.twig' %}
 
-{% block title %}Hello SearchController!{% endblock %}
+{% block title %}Catalog{% endblock %}
 
 {% block content %}
 
@@ -8,16 +8,18 @@
     <div class="example-wrapper">
 
             {% for film in result%}
-                <a href="/description/{{ film.id }}">
-                    <div style="width:310px;height:680px;border:1px solid green;float:left;">
-                        <div style="width:310px;height:630px;">
+
+                    <div style="width:310px;height:670px;border:1px solid blue;float:left;">
+                        <div style="width:310px;height:630px;text-align:center;">
                             <p>{{ film.title }}</p>
                             <p>{{ film.year }}</p>
-                            <img src="{{ film.poster }}"/>
-                            <p style="font-size:9px;">{{ film.plot }}</p>
+                            <a href="/description/{{ film.id }}">
+                                <img src="{{ film.poster }}"/>
+                            </a>
+                            <div style="width:100%;margin-top:10px;font-size:10px;">{{ film.plot }}</div>
                         </div>
                         <div style="width:100%;margin:0 auto;">
-                            <div style="width:140px;float:left"><a href="/delete/{{film.id}}"><button type="button" class="btn btn-danger">REMOVE FILM</button></a></div>
+                            <div style="width:140px;margin-left:5px;float:left"><a href="/delete/{{film.id}}"><button type="button" class="btn btn-danger">REMOVE FILM</button></a></div>
                             {%  if film.id in favorites %}
                                 <div style="width:160px;float:right"><a href="/removeFavorit/{{film.id}}"><button type="button" class="btn btn-secondary">REMOVE FM FAV</button></a></div>
                             {%  else %}
@@ -25,7 +27,7 @@
                             {%  endif %}
                         </div>
                     </div>
-                </a>
+
             {% endfor %}
     </div>
 {% endblock %}

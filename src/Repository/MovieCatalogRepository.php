@@ -31,6 +31,7 @@ class MovieCatalogRepository extends ServiceEntityRepository
 
     public function save(MovieDto $movieDto)
     {
+
         $movie = new MovieCatalog();
         $movie->setTitle($movieDto->title)
             ->setDirector($movieDto->director)
@@ -39,22 +40,9 @@ class MovieCatalogRepository extends ServiceEntityRepository
             ->setPoster($movieDto->poster)
             ->setReleased(new \DateTime($movieDto->release))
             ->setType($movieDto->type)
-            ->setYear($movieDto->year);
+            ->setYear((int)$movieDto->year);
         $this->getEntityManager()->persist($movie);
         $this->getEntityManager()->flush();
     }
 
-
-    public function delete($id)
-    {
-        /*
-        $em = $this->getDoctrine()->getManager();
-        $entity = $this->findOneBy(array('id' => $id));
-
-        if ($entity != null){
-            $em->remove($entity);
-            $em->flush();
-        }
-        */
-    }
 }

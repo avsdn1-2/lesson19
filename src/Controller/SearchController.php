@@ -14,27 +14,12 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Forms;
 use App\Form\AddFormType;
 use App\Entity\Favorite;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 
 class SearchController extends AbstractController
 {
     private $catalogService;
-    /**
-     * @Route("/search", name="search")
-     */
-    /*
-    public function index(CatalogServiceInterface $catalogService): Response
-    {
-        $result = $catalogService->search('Enemy Mine');
 
-        return $this->render('search/index.html.twig', [
-            'result' => $result,
-        ]);
-    }
-    */
     public function __construct(CatalogServiceInterface $catalogService)
     {
         $this->catalogService = $catalogService;
@@ -45,6 +30,7 @@ class SearchController extends AbstractController
      */
     public function index(): Response
     {
+        //перенаправляем на страницу list
         return $this->redirectToRoute('list');
     }
 
@@ -56,14 +42,9 @@ class SearchController extends AbstractController
         $result = $this->catalogService->list()['list'];
         $favorites_obj = $this->catalogService->list()['favorites'];
 
-        $session = $this->get('session');
-        $res = $session->get('res');
-        //var_dump($res);;
-
         return $this->render('search/list.html.twig', [
             'result' => $result,
             'favorites' => $this->toArray($favorites_obj),
-            'res' => $res,
         ]);
     }
 
@@ -73,7 +54,6 @@ class SearchController extends AbstractController
     public function description($id): Response
     {
         $result = $this->catalogService->searchById($id);
-        dd($result);
 
         return $this->render('search/description.html.twig', [
             'result' => $result,
@@ -98,11 +78,6 @@ class SearchController extends AbstractController
             }
         }
 
-
-        $session = $this->get('session');
-        $res = $session->get('res');
-        //var_dump($res);;
-
         return $this->render('search/list.html.twig', [
             'result' => $result,
             'favorites' => $this->toArray($favorites_obj),
@@ -124,19 +99,11 @@ class SearchController extends AbstractController
             $title = $add_form['title'];
             $res = $this->catalogService->add($title);
 
-            //$session = $this->getRequest()->getSession();
-                //$session = $this->get('session');
-
-            // store an attribute for reuse during a later user request
-                //$session->set('res',$res);
-            //dd($session);
-
+            //если фильм успешно добавлен
             if ($res == 1){
                 return $this->redirectToRoute('list');
                 exit();
             }
-
-
         }
 
         return $this->render('search/add.html.twig', array(
@@ -176,7 +143,6 @@ class SearchController extends AbstractController
         $favorite->setFilmId($id);
 
         $entityManager->persist($favorite);
-
         $entityManager->flush();
 
         return $this->redirectToRoute('list');

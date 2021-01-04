@@ -1,0 +1,28 @@
+{% extends 'layouts/site_layout.html.twig' %}
+
+{% block title %}Description{% endblock %}
+
+{% block content %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .bold_w { font-weight:bold; }
+    .st_italic { font-size:16px;font-style:italic; }
+</style>
+
+<div class="example-wrapper">
+
+
+        <div style="width:310px;height:600px;float:left"><img src="{{ result.poster }}"/></div>
+        <div style="width:450px;margin:10px 0 0 310px;">
+                <div><span class="bold_w">Title:</span> {{ result.title }}</div>
+                <div><span class="bold_w">Year:</span> {{ result.year }}</div>
+                <div><span class="bold_w">Type:</span> {{ result.type }}</div>
+                <div><span class="bold_w">Director:</span> {{ result.director }}</div>
+                <div><span class="bold_w">Release:</span> {{ result.release }}</div>
+                <div style="margin:10px 0 0 0;"><span class="bold_w" >Plot:</span><span class="st_italic"> {{ result.plot }}</span></div>
+        </div>
+
+
+</div>
+{% endblock %}

@@ -64,7 +64,6 @@ class CatalogService implements CatalogServiceInterface
      * @param MovieDto $movieDto
      * @return mixed
      */
-    //public function add(MovieDto $movieDto)
     public function add(string $title): ?int
     {
         $movie = $this->movieCatalogRepository->findOneBy(['title'=>$title]);
